@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.NewsInforDao">
+		<select id="searchNews" resultMap="getNews" parameterType="com.xhu.entity.News">
+			select id,news_content,publish_time,news_title from news order by publish_time desc limit #{page},#{rows}
+		</select>
+		<resultMap type="com.xhu.entity.News" id="getNews">
+			<id column="id" property="id"/>
+			<result column="news_content" property="news_content"/>
+			<result column="publish_time" property="publish_time"/>
+			<result column="news_title" property="news_title"/>
+		</resultMap>
+		
+		
+		<select id="searchCount" resultType="java.lang.Integer" parameterType="com.xhu.entity.News">
+			select count(id) from news
+		</select>
+</mapper>

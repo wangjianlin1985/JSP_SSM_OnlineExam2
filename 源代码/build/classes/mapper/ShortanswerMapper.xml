@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.ShortanswerMapper" >
+  <resultMap id="BaseResultMap" type="com.xhu.entity.Shortanswer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="stuid" property="stuid" jdbcType="VARCHAR" />
+    <result column="objectivescore" property="objectivescore" jdbcType="INTEGER" />
+    <result column="subjectiveanswer" property="subjectiveanswer" jdbcType="VARCHAR" />
+    <result column="stuname" property="stuname" jdbcType="VARCHAR" />
+    <result column="papername" property="papername" jdbcType="VARCHAR" />
+    <result column="readstut" property="readstatu" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, stuid, objectivescore, subjectiveanswer, stuname, papername, readstut
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from shortanswer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from shortanswer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xhu.entity.Shortanswer" >
+    insert into shortanswer (id, stuid, objectivescore, 
+      subjectiveanswer, stuname, papername, 
+      readstut)
+    values (#{id,jdbcType=INTEGER}, #{stuid,jdbcType=VARCHAR}, #{objectivescore,jdbcType=INTEGER}, 
+      #{subjectiveanswer,jdbcType=VARCHAR}, #{stuname,jdbcType=VARCHAR}, #{papername,jdbcType=VARCHAR}, 
+      #{readstut,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xhu.entity.Shortanswer" >
+    insert into shortanswer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="stuid != null" >
+        stuid,
+      </if>
+      <if test="objectivescore != null" >
+        objectivescore,
+      </if>
+      <if test="subjectiveanswer != null" >
+        subjectiveanswer,
+      </if>
+      <if test="stuname != null" >
+        stuname,
+      </if>
+      <if test="papername != null" >
+        papername,
+      </if>
+      <if test="readstut != null" >
+        readstut,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stuid != null" >
+        #{stuid,jdbcType=VARCHAR},
+      </if>
+      <if test="objectivescore != null" >
+        #{objectivescore,jdbcType=INTEGER},
+      </if>
+      <if test="subjectiveanswer != null" >
+        #{subjectiveanswer,jdbcType=VARCHAR},
+      </if>
+      <if test="stuname != null" >
+        #{stuname,jdbcType=VARCHAR},
+      </if>
+      <if test="papername != null" >
+        #{papername,jdbcType=VARCHAR},
+      </if>
+      <if test="readstut != null" >
+        #{readstatu,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xhu.entity.Shortanswer" >
+    update shortanswer
+    <set >
+      <if test="stuid != null" >
+        stuid = #{stuid,jdbcType=VARCHAR},
+      </if>
+      <if test="objectivescore != null" >
+        objectivescore = #{objectivescore,jdbcType=INTEGER},
+      </if>
+      <if test="subjectiveanswer != null" >
+        subjectiveanswer = #{subjectiveanswer,jdbcType=VARCHAR},
+      </if>
+      <if test="stuname != null" >
+        stuname = #{stuname,jdbcType=VARCHAR},
+      </if>
+      <if test="papername != null" >
+        papername = #{papername,jdbcType=VARCHAR},
+      </if>
+      <if test="readstut != null" >
+        readstatu = #{readstatu,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xhu.entity.Shortanswer" >
+    update shortanswer
+    set stuid = #{stuid,jdbcType=VARCHAR},
+      objectivescore = #{objectivescore,jdbcType=INTEGER},
+      subjectiveanswer = #{subjectiveanswer,jdbcType=VARCHAR},
+      stuname = #{stuname,jdbcType=VARCHAR},
+      papername = #{papername,jdbcType=VARCHAR},
+      readstatu = #{readstut,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="searchShrotanswerCount" resultType="java.lang.Integer"
+		parameterType="com.xhu.entity.Shortanswer">
+		SELECT count(stuid) from shortanswer where papername=#{papername} 
+	</select>
+  <select id="getShortAnswer" resultMap="BaseResultMap">
+	SELECT *  from shortanswer WHERE papername = #{papername} limit #{page},#{rows}
+	</select>
+	<update id="updatestatu">
+	UPDATE shortanswer SET readstatu = 1 WHERE stuid = #{stuid} 
+	</update>
+</mapper>

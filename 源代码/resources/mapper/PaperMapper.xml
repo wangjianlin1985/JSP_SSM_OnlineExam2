@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.PaperMapper">
+	<resultMap id="BaseResultMap" type="com.xhu.entity.Paper">
+		<id column="paper_id" property="paperId" jdbcType="INTEGER" />
+		<result column="paper_name" property="paperName" jdbcType="VARCHAR" />
+		<result column="allscore" property="allscore" jdbcType="INTEGER" />
+		<result column="paper_time" property="paperTime" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="DATE" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		paper_id, paper_name, allscore, paper_time, create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from paper
+		where paper_name = #{name}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from paper
+		where paper_id = #{paperId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.xhu.entity.Paper">
+		insert into paper (paper_id, paper_name, allscore,
+		paper_time, create_time)
+		values (#{paperId,jdbcType=INTEGER}, #{paperName,jdbcType=VARCHAR},
+		#{allscore,jdbcType=INTEGER},
+		#{paperTime,jdbcType=INTEGER}, #{createTime,jdbcType=DATE})
+	</insert>
+	<insert id="insertSelective" parameterType="com.xhu.entity.Paper">
+		insert into paper
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="paperId != null">
+				paper_id,
+			</if>
+			<if test="paperName != null">
+				paper_name,
+			</if>
+			<if test="allscore != null">
+				allscore,
+			</if>
+			<if test="paperTime != null">
+				paper_time,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="paperId != null">
+				#{paperId,jdbcType=INTEGER},
+			</if>
+			<if test="paperName != null">
+				#{paperName,jdbcType=VARCHAR},
+			</if>
+			<if test="allscore != null">
+				#{allscore,jdbcType=INTEGER},
+			</if>
+			<if test="paperTime != null">
+				#{paperTime,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=DATE},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.xhu.entity.Paper">
+		update paper
+		<set>
+			<if test="paperName != null">
+				paper_name = #{paperName,jdbcType=VARCHAR},
+			</if>
+			<if test="allscore != null">
+				allscore = #{allscore,jdbcType=INTEGER},
+			</if>
+			<if test="paperTime != null">
+				paper_time = #{paperTime,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=DATE},
+			</if>
+		</set>
+		where paper_id = #{paperId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.xhu.entity.Paper">
+		update paper
+		set paper_name = #{paperName,jdbcType=VARCHAR},
+		allscore = #{allscore,jdbcType=INTEGER},
+		paper_time = #{paperTime,jdbcType=INTEGER},
+		create_time = #{createTime,jdbcType=DATE}
+		where paper_id = #{paperId,jdbcType=INTEGER}
+	</update>
+
+	<!--分页查询 -->
+	<select id="searchPaper" resultMap="BaseResultMap"
+		parameterType="com.xhu.entity.Paper">
+		select
+		<include refid="Base_Column_List" />
+		from paper
+		<trim prefix="where " suffix=" " suffixOverrides="and" >
+	   <if test="paperName != null ">
+         paper_name like "%"#{paperName,jdbcType=VARCHAR}"%" and
+       </if>  
+      </trim>
+		limit #{page,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+	</select>
+	<!--查询总条数 -->
+	<select id="searchCount" resultType="java.lang.Integer">
+		select count(paper_id) from
+		paper
+		<trim prefix="where " suffix=" " suffixOverrides="and" >
+	   <if test="paperName != null ">
+         paper_name like "%"#{paperName,jdbcType=VARCHAR}"%" and
+       </if>  
+    
+      </trim>
+	</select>
+	<delete id="del">
+		delete from paper
+		where paper_id in
+		<foreach item="x" collection="list" open="(" separator=","
+			close=")">
+			#{x}
+		</foreach>
+	</delete>
+	<!-- 删除中间表信息 -->
+	<delete id="delqp">
+		delete from question_paper
+		where paper_id in
+		<foreach item="x" collection="list" open="(" separator=","
+			close=")">
+			#{x}
+		</foreach>
+	</delete>
+	<!-- 检查试卷名是否重复 -->
+	<select id="checkname" resultType="java.lang.Integer">
+		SELECT COUNT(paper_id) FROM paper WHERE paper_name=#{papername}
+	</select>
+	<!--获取考试时间  -->
+	<select id="getpapertime" resultType="java.lang.Integer">
+		SELECT paper_time from paper where paper_id=#{paperid}
+	</select>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.DistributePermMapper" >
+<insert id="saverole">
+insert into role_user(role_id,user_id) select r.id,u.id from user u,role r where user_name=#{username} and r.id=#{roleid}
+</insert>
+<select id="selectUser" resultType="com.xhu.entity.User">
+		select  * from user
+  	 
+  	<trim prefix="where " suffix=" " suffixOverrides="and" >
+	   <if test="username != null ">
+         user_name like "%"#{username,jdbcType=VARCHAR}"%" and
+       </if>       
+      </trim>
+  	limit #{page,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+	</select>
+	<select id="searchCount" resultType="java.lang.Integer">
+		 select  count(id)  from user
+  	   	<trim prefix="where " suffix=" " suffixOverrides="and" >
+	   <if test="username != null ">
+         user_name like "%"#{username,jdbcType=VARCHAR}"%" and
+       </if>       
+      </trim>
+	</select>
+</mapper>

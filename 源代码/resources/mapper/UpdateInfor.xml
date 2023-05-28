@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.UpdateInforDao">
+		<update id="updateInfor">
+			update user u,student s
+			<set>
+				<if test="password!=null">
+					u.`password`=#{password},
+				</if>
+				<if test="email!=null">
+					u.email = #{email},
+				</if>
+				<if test="cnUser!=null">
+					s.stu_name = #{cnUser}
+				</if>
+			</set>
+            where u.user_name=s.account and u.user_name = #{username}
+		</update>
+</mapper>

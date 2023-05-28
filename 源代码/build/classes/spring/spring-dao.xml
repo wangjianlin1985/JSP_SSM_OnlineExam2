@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		   http://www.springframework.org/schema/beans/spring-beans.xsd 
+		   http://www.springframework.org/schema/context
+		   http://www.springframework.org/schema/context/spring-context.xsd">
+  	<context:property-placeholder location="classpath:mybatis/jdbc.properties"/>
+	<!-- spring 整合mybatis -->
+	<!-- 配置数据库 数据源 -->
+	<bean id="ds" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${driver}" />
+		<property name="jdbcUrl" value="${url}" />
+		<property name="user" value="${name}" />
+		<property name="password" value="${pwd}" />
+		<!-- 连接池私有属性 -->
+		<property name="maxPoolSize" value="30"></property>
+		<property name="minPoolSize" value="10"></property>
+		<!--关闭连接后不自动Commit -->
+		<property name="autoCommitOnClose" value="false"></property>
+		<!-- 获取连接超时时间 -->
+		<property name="checkoutTimeout" value="1000"></property>
+		<!-- 当获取连接失败重试次数 -->
+		<property name="acquireRetryAttempts" value="2"></property>
+	</bean>
+	<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="ds" />
+		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>
+		<property name="mapperLocations" value="classpath:mapper/*.xml" />
+	</bean>
+	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.xhu.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+</beans>
+
+

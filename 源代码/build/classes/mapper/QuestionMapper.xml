@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.QuestionMapper">
+	<resultMap id="BaseResultMap" type="com.xhu.entity.Question">
+		<id column="q_id" property="qId" jdbcType="INTEGER" />
+		<result column="q_content" property="qContent" jdbcType="VARCHAR" />
+		<result column="q_type" property="qType" jdbcType="INTEGER" />
+		<result column="a_option" property="aOption" jdbcType="VARCHAR" />
+		<result column="b_option" property="bOption" jdbcType="VARCHAR" />
+		<result column="c_option" property="cOption" jdbcType="VARCHAR" />
+		<result column="d_option" property="dOption" jdbcType="VARCHAR" />
+		<result column="answer" property="answer" jdbcType="VARCHAR" />
+		<result column="score" property="score" jdbcType="INTEGER" />
+		<result column="difficulty_id" property="difficultyId"
+			jdbcType="INTEGER" />
+		<result column="question_create_time" property="questionCreateTime"
+			jdbcType="DATE" />
+		<association property="qt" javaType="com.xhu.entity.QuestionType">
+			<result column="question_type_name" property="questionTypeName" />
+		</association>
+		<association property="difficulty" javaType="com.xhu.entity.Difficulty">
+			<result column="diffculty_level" property="diffcultlyLevel" />
+		</association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		q_id, q_content, q_type, a_option, b_option, c_option,
+		d_option, answer,
+		score, difficulty_id,
+		question_create_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from question
+		where q_id = #{qId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		question
+		where q_id = #{qId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.xhu.entity.Question">
+		insert into question (q_id,
+		q_content, q_type,
+		a_option, b_option, c_option,
+		d_option, answer,
+		score,
+		difficulty_id, question_create_time)
+		values
+		(#{qId,jdbcType=INTEGER}, #{qContent,jdbcType=VARCHAR},
+		#{qType,jdbcType=INTEGER},
+		#{aOption,jdbcType=VARCHAR},
+		#{bOption,jdbcType=VARCHAR}, #{cOption,jdbcType=VARCHAR},
+		#{dOption,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR},
+		#{score,jdbcType=INTEGER},
+		#{difficultyId,jdbcType=INTEGER},
+		#{questionCreateTime,jdbcType=DATE})
+	</insert>
+	<insert id="insertSelective" parameterType="com.xhu.entity.Question">
+		insert into question
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="qId != null">
+				q_id,
+			</if>
+			<if test="qContent != null">
+				q_content,
+			</if>
+			<if test="qType != null">
+				q_type,
+			</if>
+			<if test="aOption != null">
+				a_option,
+			</if>
+			<if test="bOption != null">
+				b_option,
+			</if>
+			<if test="cOption != null">
+				c_option,
+			</if>
+			<if test="dOption != null">
+				d_option,
+			</if>
+			<if test="answer != null">
+				answer,
+			</if>
+			<if test="score != null">
+				score,
+			</if>
+			<if test="difficultyId != null">
+				difficulty_id,
+			</if>
+			<if test="questionCreateTime != null">
+				question_create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="qId != null">
+				#{qId,jdbcType=INTEGER},
+			</if>
+			<if test="qContent != null">
+				#{qContent,jdbcType=VARCHAR},
+			</if>
+			<if test="qType != null">
+				#{qType,jdbcType=INTEGER},
+			</if>
+			<if test="aOption != null">
+				#{aOption,jdbcType=VARCHAR},
+			</if>
+			<if test="bOption != null">
+				#{bOption,jdbcType=VARCHAR},
+			</if>
+			<if test="cOption != null">
+				#{cOption,jdbcType=VARCHAR},
+			</if>
+			<if test="dOption != null">
+				#{dOption,jdbcType=VARCHAR},
+			</if>
+			<if test="answer != null">
+				#{answer,jdbcType=VARCHAR},
+			</if>
+			<if test="score != null">
+				#{score,jdbcType=INTEGER},
+			</if>
+			<if test="difficultyId != null">
+				#{difficultyId,jdbcType=INTEGER},
+			</if>
+			<if test="questionCreateTime != null">
+				#{questionCreateTime,jdbcType=DATE},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.xhu.entity.Question">
+		update question
+		<set>
+			<if test="qContent != null">
+				q_content = #{qContent,jdbcType=VARCHAR},
+			</if>
+			<if test="qType != null">
+				q_type = #{qType,jdbcType=INTEGER},
+			</if>
+			<if test="aOption != null">
+				a_option = #{aOption,jdbcType=VARCHAR},
+			</if>
+			<if test="bOption != null">
+				b_option = #{bOption,jdbcType=VARCHAR},
+			</if>
+			<if test="cOption != null">
+				c_option = #{cOption,jdbcType=VARCHAR},
+			</if>
+			<if test="dOption != null">
+				d_option = #{dOption,jdbcType=VARCHAR},
+			</if>
+			<if test="answer != null">
+				answer = #{answer,jdbcType=VARCHAR},
+			</if>
+			<if test="score != null">
+				score = #{score,jdbcType=INTEGER},
+			</if>
+			<if test="difficultyId != null">
+				difficulty_id = #{difficultyId,jdbcType=INTEGER},
+			</if>
+			<if test="questionCreateTime != null">
+				question_create_time =
+				#{questionCreateTime,jdbcType=DATE},
+			</if>
+		</set>
+		where q_id = #{qId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.xhu.entity.Question">
+		update question
+		set q_content = #{qContent,jdbcType=VARCHAR},
+		q_type =
+		#{qType,jdbcType=INTEGER},
+		a_option = #{aOption,jdbcType=VARCHAR},
+		b_option = #{bOption,jdbcType=VARCHAR},
+		c_option =
+		#{cOption,jdbcType=VARCHAR},
+		d_option = #{dOption,jdbcType=VARCHAR},
+		answer = #{answer,jdbcType=VARCHAR},
+		score = #{score,jdbcType=INTEGER},
+		difficulty_id = #{difficultyId,jdbcType=INTEGER},
+		question_create_time
+		= #{questionCreateTime,jdbcType=DATE}
+		where q_id =
+		#{qId,jdbcType=INTEGER}
+	</update>
+	<!--分页查询 -->
+	<select id="searchQuestion" resultMap="BaseResultMap">
+		SELECT q.*,qt.question_type_name,di.diffcultly_level from question q
+		,question_type qt,difficulty di where q.difficulty_id = di.id and
+		q.q_type = qt.question_type_id
+		<trim prefix="and " suffix=" " suffixOverrides="and">
+			<if test="qContent != null ">
+				q_content like '%${qContent}%' and
+			</if>
+		</trim>
+		limit #{page},#{rows}
+	</select>
+	<!--查询总条数 -->
+	<select id="searchCount" resultType="java.lang.Integer"
+		parameterType="com.xhu.entity.Question">
+		select count(q_id) from question q , question_type
+		qt,difficulty di
+		where q.difficulty_id =di.id and q.q_type =
+		qt.question_type_id
+		<trim prefix="and " suffix=" " suffixOverrides="and">
+			<if test="qContent != null ">
+				q_content like '%${qContent}%' and
+			</if>
+		</trim>
+	</select>
+	<delete id="del">
+		delete from question
+		where q_id in
+		<foreach item="x" collection="list" open="(" separator=","
+			close=")">
+			#{x}
+		</foreach>
+	</delete>
+	<!-- 验证题号 -->
+	<select id="checkQid" resultType="java.lang.Integer">
+	SELECT COUNT(*) from question where q_id = #{qid}
+	</select>
+</mapper>

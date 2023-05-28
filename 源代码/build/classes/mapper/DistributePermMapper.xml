@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.DistributePermMapper" >
+  <resultMap type="com.xhu.entity.Node" id="NodeMap">
+      <id column="level" property="id" jdbcType="INTEGER" />
+      <result column="p_name" property="text" jdbcType="VARCHAR" />
+      <result column="level_p" property="parentId" jdbcType="VARCHAR" />
+  </resultMap>
+ <select id="searchPer" resultMap="NodeMap" parameterType="java.lang.String">
+  
+select * from permission 
+  </select>
+  <insert id="insert">
+   insert into role_p(r_id,l_id) select r.id,p.id from role r,permission p where   p_name=#{sname} and role_name=#{name}
+  </insert>
+  <select id="selectP" resultType="java.lang.String">
+  	select p_name from permission where id in(select rp.id from role_p rp,role r where role_name=#{name} and rp.r_id=r.id)
+  </select>
+    <select id="sss" resultType="java.lang.Integer">
+  	select max(level) from permission
+  </select>
+    <insert id="addpermission">
+  	insert into permission(p_name,p_method,level_p,level) values (#{p_name},#{p_method},#{level_p},#{level})
+  </insert>
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.LoginDao">
+		<select id="selectByUsername" resultMap="getInfor">
+			SELECT u.id,u.user_name,u.`password`,u.email,u.randcode,r.role_name from user u,role_user ru,role r 
+			where u.id=ru.user_id and r.id=ru.role_id and u.user_name=#{username}
+		</select>
+		
+		<resultMap type="com.xhu.entity.User" id="getInfor">
+			<id property="id" column="id"/>
+			<result property="username" column="user_name"/>
+			<result property="password" column="password"/>
+			<result property="email" column="email"/>
+			<result property="randCode" column="randcode"/>
+			<result property="role" column="role_name"/>
+		</resultMap>
+		
+		
+		<select id="searchClazzId" resultType="java.lang.Integer">
+			select clazz_id from clazz where clazz_name=#{clazzName}
+		</select>
+		
+		<select id="searchDeparId" resultType="java.lang.Integer">
+			select department_id from department where department_name=#{department}
+		</select>
+		
+		
+		
+		<insert id="insertUser">
+			insert into user(user_name,password,email) values(#{username},#{password},#{email})
+		</insert>
+		
+		<insert id="insertstudent">
+			insert into student(stu_name,stu_id,clazz_id,department_id,account) values(#{cnUser},#{stuID},#{clazzID},#{departmentID},#{username})
+		</insert>
+		
+		<select id="searchRoleID" resultType="java.lang.Integer">
+			select id from role where role_name=#{role}
+		</select>
+		<select id="searchUserID" resultType="java.lang.Integer">
+			select id from user where user_name=#{userID}
+		</select>
+		<insert id="insertUserRole">
+			insert into role_user(role_id,user_id) values(#{roleID},#{userID})
+		</insert>
+		
+		
+		
+		<select id="searchClazz" resultMap="getClazzInfor">
+			select clazz_id,clazz_name,teacher_id from clazz
+		</select>
+		
+		<select id="searchDepartment" resultMap="getDepartmentInfor">
+			select department_id,department_name from department
+		</select>
+		
+		<resultMap type="com.xhu.entity.SelectInfor" id="getDepartmentInfor">
+			<id column="department_id" property="id"/>
+			<result column="department_name" property="text"/>
+		</resultMap>
+		<resultMap type="com.xhu.entity.SelectInfor" id="getClazzInfor">
+			<id column="clazz_id" property="id"/>
+			<result column="clazz_name" property="text"/>
+		</resultMap>
+		
+		<update id="updateCode">
+			update user set randcode=#{randomCode} where user_name=#{username} 
+		</update>
+		
+		<update id="updatePassword">
+			update user set password=#{newPassword} where user_name=#{username} 
+		</update>
+		
+</mapper>

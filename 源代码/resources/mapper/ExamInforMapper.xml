@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.ExamDao">
+		<select id="selectExam" resultMap="getExam" parameterType="java.lang.String">
+			select t.id,exam_name,exam_time,paper_name from t_exam t,paper p,student s 
+			where t.paper_id = p.paper_id and t.stu_id = s.stu_id and s.account = #{account} and t.exam_statu = 0
+			and t.exam_time BETWEEN  (select date_sub(NOW(),INTERVAL 1 day))  
+			and (select date_add(NOW(),INTERVAL 7 day)) order by exam_time ASC;
+		</select>
+		<resultMap type="com.xhu.entity.ExamInfor" id="getExam">
+			<id column="id" property="id"/>
+			<result column="exam_name" property="examName"/>
+			<result column="exam_time" property="examTime"/>
+			<result column="paper_name" property="paperName"/>
+		</resultMap>
+		
+		<select id="selectPreExam" resultMap="getPreExam" parameterType="java.lang.String">
+			SELECT t.id,t.exam_name,t.exam_time,t.exam_statu,p.paper_name FROM t_exam t,paper p,student s 
+			WHERE p.paper_id = t.paper_id and s.stu_id = t.stu_id and s.account=#{account} and 
+			DATE_FORMAT( exam_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) and date(exam_time) &lt;= CURDATE()
+		</select>
+		<resultMap type="com.xhu.entity.ExamInfor" id="getPreExam"> 
+			<id column="id" property="id"/>
+			<result column="exam_name" property="examName"/>
+			<result column="exam_time" property="examTime"/>
+			<result column="paper_name" property="paperName"/>
+			<result column="exam_statu" property="status"/>
+		</resultMap>
+		
+		
+</mapper>

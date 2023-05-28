@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.ShowStuMapper" >
+<resultMap id="BaseResultMap" type="com.xhu.entity.Student" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="stu_name" property="stu_name" jdbcType="VARCHAR" />
+    <result column="stu_id" property="stu_id" jdbcType="INTEGER" />
+    <result column="clazz_id" property="clazz_id" jdbcType="INTEGER" />
+    <result column="department_id" property="department_id" jdbcType="INTEGER" />
+    <result column="teacher_id" property="teacher_id" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="INTEGER" />
+    
+    <association property="clazz" javaType="com.xhu.entity.Clazz">
+    	  <result column="clazz_name" property="clazz_name" jdbcType="VARCHAR" />
+    </association>
+    <association property="department" javaType="com.xhu.entity.Department">
+    	  <result column="department_name" property="department_name" jdbcType="VARCHAR" />
+    </association>
+    <association property="teacher" javaType="com.xhu.entity.Teacher">
+    	  <result column="teacher_name" property="teacher_name" jdbcType="VARCHAR" />
+    </association>
+    <association property="texam" javaType="com.xhu.entity.Texam">
+    	  <result column="exam_name" property="exam_name" jdbcType="VARCHAR" />
+    	  <result column="exam_statu" property="exam_statu" jdbcType="INTEGER" />
+    	  <result column="exam_score" property="exam_score" jdbcType="INTEGER" />
+    </association>
+  </resultMap>
+<select id="selectStu" resultMap="BaseResultMap" >
+		select s.id,stu_name,stu_id,department_name,teacher_name,clazz_name,account
+from student s,department d ,teacher t,clazz c
+where s.department_id=d.department_id and s.teacher_id=t.teacher_id and c.clazz_id=s.clazz_id
+  	 
+  	<trim prefix="and " suffix=" " suffixOverrides="and" >
+	   <if test="stu_name != null ">
+         stu_name like "%"#{stu_name,jdbcType=VARCHAR}"%" and
+       </if>       
+      </trim>
+  	limit #{page,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+	</select>
+	<select id="selectStudents" resultMap="BaseResultMap" >
+		select s.id,stu_name,stu_id,department_name,clazz_name,account
+from student s,department d ,teacher t,clazz c
+where s.department_id=d.department_id and s.teacher_id=t.teacher_id and c.clazz_id=s.clazz_id and c.teacher_id=t.teacher_id and teacher_name=#{teacher.teacher_name}
+  	 
+  	<trim prefix="and " suffix=" " suffixOverrides="and" >
+	   <if test="stu_name != null ">
+         stu_name like "%"#{stu_name,jdbcType=VARCHAR}"%" and
+       </if>       
+      </trim>
+  	limit #{page,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+	</select>
+	<select id="searchCounts" resultType="java.lang.Integer">
+		select count(s.id)
+from student s,department d ,teacher t,clazz c
+where s.department_id=d.department_id and s.teacher_id=t.teacher_id and c.clazz_id=s.clazz_id and c.teacher_id=t.teacher_id and teacher_name=#{teacher.teacher_name}
+
+  	   <trim prefix="and " suffix=" " suffixOverrides="and" >
+	   <if test="stu_name != null ">
+         stu_name like "%"#{stu_name,jdbcType=VARCHAR}"%" and
+       </if>       
+      </trim>
+	</select>
+	<select id="searchCount" resultType="java.lang.Integer">
+		select count(s.id) from teacher t,student s,department d ,clazz c
+where s.teacher_id=t.teacher_id and c.clazz_id=s.clazz_id and s.department_id=d.department_id
+  	   <trim prefix="and " suffix=" " suffixOverrides="and" >
+	   <if test="stu_name != null ">
+         stu_name like "%"#{stu_name,jdbcType=VARCHAR}"%" and
+       </if>       
+      </trim>
+	</select>
+	<select id="Students" resultMap="BaseResultMap" >
+		select te.id,s.stu_name,c.clazz_name,t.teacher_name,d.department_name,te.exam_name,te.exam_statu,te.exam_score from teacher t,student s,clazz c,t_exam te,department d 
+where s.teacher_id=t.teacher_id and s.clazz_id=c.clazz_id and te.stu_id=s.stu_id and c.teacher_id=t.teacher_id and s.department_id=d.department_id and account=#{account}
+  	 
+  	<trim prefix="and " suffix=" " suffixOverrides="and" >
+        <if test="clazz != null">
+         clazz_name =#{clazz.clazz_name} and
+       </if>
+       <if test="stu_name != ''&amp;&amp; stu_name!=null ">
+         stu_name like "%"#{stu_name,jdbcType=VARCHAR}"%" and
+       </if> 
+        <if test="texam != null ">
+         exam_statu =#{texam.exam_statu} and
+       </if>
+      </trim>
+  	limit #{page,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}
+	</select>
+	<select id="Counts" resultType="java.lang.Integer">
+		select count(te.id)from teacher t,student s,clazz c,t_exam te,department d 
+where s.teacher_id=t.teacher_id and s.clazz_id=c.clazz_id and te.stu_id=s.stu_id and c.teacher_id=t.teacher_id and s.department_id=d.department_id and account=#{account}
+  	   <trim prefix="and " suffix=" " suffixOverrides="and" >
+	   <if test="account != null ">
+         account =#{account,jdbcType=VARCHAR} and
+       </if>       
+      </trim>
+	</select>
+	<delete id="del">
+		delete from t_exam where exam_name=#{exam_name}
+	</delete>
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.StudentMapper" >
+  <resultMap id="BaseResultMap" type="com.xhu.entity.Student" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="stu_name" property="stuName" jdbcType="VARCHAR" />
+    <result column="stu_id" property="stuId" jdbcType="VARCHAR" />
+    <result column="clazz_id" property="clazzId" jdbcType="INTEGER" />
+    <result column="department_id" property="departmentId" jdbcType="INTEGER" />
+    <result column="teacher_id" property="teacherId" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, stu_name, stu_id, clazz_id, department_id, teacher_id, account
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from student
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from student
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.xhu.entity.Student" >
+    insert into student (id, stu_name, stu_id, 
+      clazz_id, department_id, teacher_id, 
+      account)
+    values (#{id,jdbcType=INTEGER}, #{stuName,jdbcType=VARCHAR}, #{stuId,jdbcType=VARCHAR}, 
+      #{clazzId,jdbcType=INTEGER}, #{departmentId,jdbcType=INTEGER}, #{teacherId,jdbcType=VARCHAR}, 
+      #{account,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xhu.entity.Student" >
+    insert into student
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="stuName != null" >
+        stu_name,
+      </if>
+      <if test="stuId != null" >
+        stu_id,
+      </if>
+      <if test="clazzId != null" >
+        clazz_id,
+      </if>
+      <if test="departmentId != null" >
+        department_id,
+      </if>
+      <if test="teacherId != null" >
+        teacher_id,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="stuName != null" >
+        #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuId != null" >
+        #{stuId,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzId != null" >
+        #{clazzId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        #{teacherId,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xhu.entity.Student" >
+    update student
+    <set >
+      <if test="stuName != null" >
+        stu_name = #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuId != null" >
+        stu_id = #{stuId,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzId != null" >
+        clazz_id = #{clazzId,jdbcType=INTEGER},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="teacherId != null" >
+        teacher_id = #{teacherId,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xhu.entity.Student" >
+    update student
+    set stu_name = #{stuName,jdbcType=VARCHAR},
+      stu_id = #{stuId,jdbcType=VARCHAR},
+      clazz_id = #{clazzId,jdbcType=INTEGER},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      teacher_id = #{teacherId,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getStudent"  resultType="com.xhu.entity.Student">
+  
+  select * from student where teacher_id=#{teacherid}
+  
+  </select>
+  
+   <select id="selectStudentByUsername"  resultType="com.xhu.entity.Student">
+  
+  select * from student where account=#{username}
+  
+  </select>
+</mapper>

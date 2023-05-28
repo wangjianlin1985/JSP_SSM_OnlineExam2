@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xhu.dao.QuestionPaperMapper">
+	<resultMap id="BaseResultMap" type="com.xhu.entity.QuestionPaper">
+		<id column="qp_id" property="qpId" jdbcType="INTEGER" />
+		<result column="question_id" property="questionId" jdbcType="INTEGER" />
+		<result column="paper_id" property="paperId" jdbcType="INTEGER" />
+		<association property="q" javaType="com.xhu.entity.Question">
+			<id column="q_id" property="qId" jdbcType="INTEGER" />
+			<result column="q_content" property="qContent" jdbcType="VARCHAR" />
+			<result column="q_type" property="qType" jdbcType="INTEGER" />
+			<result column="a_option" property="aOption" jdbcType="VARCHAR" />
+			<result column="b_option" property="bOption" jdbcType="VARCHAR" />
+			<result column="c_option" property="cOption" jdbcType="VARCHAR" />
+			<result column="d_option" property="dOption" jdbcType="VARCHAR" />
+			<result column="answer" property="answer" jdbcType="VARCHAR" />
+			<result column="score" property="score" jdbcType="INTEGER" />
+		</association>
+		<association property="p" javaType="com.xhu.entity.Paper">
+			<id column="paper_id" property="paperId" jdbcType="INTEGER" />
+			<result column="paper_name" property="paperName" jdbcType="VARCHAR" />
+			<result column="allscore" property="allscore" jdbcType="INTEGER" />
+			<result column="paper_time" property="paperTime" jdbcType="INTEGER" />
+			<result column="create_time" property="createTime" jdbcType="DATE" />
+		</association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		qp_id, question_id, paper_id
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from question_paper
+		where qp_id = #{qpId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		question_paper
+		where qp_id = #{qpId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.xhu.entity.QuestionPaper">
+		insert into question_paper
+		(qp_id, question_id, paper_id
+		)
+		values (#{qpId,jdbcType=INTEGER},
+		#{questionId,jdbcType=INTEGER},
+		#{paperId,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.xhu.entity.QuestionPaper">
+		insert into question_paper
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="qpId != null">
+				qp_id,
+			</if>
+			<if test="questionId != null">
+				question_id,
+			</if>
+			<if test="paperId != null">
+				paper_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="qpId != null">
+				#{qpId,jdbcType=INTEGER},
+			</if>
+			<if test="questionId != null">
+				#{questionId,jdbcType=INTEGER},
+			</if>
+			<if test="paperId != null">
+				#{paperId,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.xhu.entity.QuestionPaper">
+		update question_paper
+		<set>
+			<if test="questionId != null">
+				question_id = #{questionId,jdbcType=INTEGER},
+			</if>
+			<if test="paperId != null">
+				paper_id = #{paperId,jdbcType=INTEGER},
+			</if>
+		</set>
+		where qp_id = #{qpId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.xhu.entity.QuestionPaper">
+		update
+		question_paper
+		set question_id = #{questionId,jdbcType=INTEGER},
+		paper_id = #{paperId,jdbcType=INTEGER}
+		where qp_id =
+		#{qpId,jdbcType=INTEGER}
+	</update>
+	
+	<!--展示试卷 -->
+	<select id="showPaper" resultMap="BaseResultMap">
+		SELECT q.*,p.* ,qp.qp_id from
+		paper p,question q,question_paper qp
+		where p.paper_id=qp.paper_id and q.q_id=qp.question_id
+		and p.paper_id=#{id}
+	</select>
+	<insert id="insertpid">
+		insert into question_paper(question_id,paper_id) values(#{name},#{pid})
+	</insert>
+	<!-- 查找简答题数量 -->
+	<select id="selectnum" resultType="java.lang.Integer">
+	SELECT count(*) from
+		paper p,question q,question_paper qp
+		where p.paper_id=qp.paper_id and q.q_id=qp.question_id
+		and p.paper_id=#{paperid} and q.q_type = 4
+	</select>
+</mapper>
